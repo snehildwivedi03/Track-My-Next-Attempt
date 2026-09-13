@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-12T18:33:32.480Z",
+  "updatedAt": "2026-09-13T09:41:28.299Z",
   "records": {
     "7d4c64df9f77e44d3a9238f740d8864bfbc13a948f4a51d49ee5810f9ed49edb": {
       "force": "UPSC",
@@ -77,10 +77,27 @@
       "emailed": true,
       "pendingRetry": false,
       "firstSeen": "2026-09-11T13:22:49.814Z",
-      "lastSeen": "2026-09-12T18:33:32.479Z",
+      "lastSeen": "2026-09-13T09:41:28.299Z",
       "provisional": true,
       "admitCard": true,
       "origin": "thirdparty:testbook"
+    },
+    "provisional::Indian Navy::SSC Officer": {
+      "force": "Indian Navy",
+      "exam": "SSC Officer",
+      "subCode": "SSC Officer",
+      "title": "▶ISRO IPRC Technical Assistant & Technician Recruitment 2026: 22 Posts for 10th, ITI & Diploma",
+      "status": "UNCONFIRMED",
+      "reason": "Any bachelor’s degree entry (unconfirmed) – likely eligible; verify.",
+      "url": "https://govtjobsalert.in/isro-iprc-technical-assistant-recruitment-2026/",
+      "hash": "a871ddbc6a6fb3fd46f26f296545a89f23e28c788dc9b779a8ec16147440a233",
+      "emailed": true,
+      "pendingRetry": false,
+      "firstSeen": "2026-09-13T09:41:21.803Z",
+      "lastSeen": "2026-09-13T09:41:21.803Z",
+      "provisional": true,
+      "admitCard": false,
+      "origin": "thirdparty:govtjobsalert"
     }
   }
 }
