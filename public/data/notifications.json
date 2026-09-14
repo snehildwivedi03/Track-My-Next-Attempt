@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-14T10:05:02.658Z",
+  "updatedAt": "2026-09-14T20:22:38.301Z",
   "records": {
     "provisional::UPSC::CDS::admit": {
       "force": "UPSC",
@@ -13,7 +13,7 @@
       "emailed": true,
       "pendingRetry": false,
       "firstSeen": "2026-09-11T13:22:49.814Z",
-      "lastSeen": "2026-09-14T10:05:02.658Z",
+      "lastSeen": "2026-09-14T20:22:38.300Z",
       "provisional": true,
       "admitCard": true,
       "origin": "thirdparty:testbook"
@@ -30,7 +30,7 @@
       "emailed": true,
       "pendingRetry": false,
       "firstSeen": "2026-09-13T09:41:21.803Z",
-      "lastSeen": "2026-09-14T10:04:57.539Z",
+      "lastSeen": "2026-09-14T20:22:34.414Z",
       "provisional": true,
       "admitCard": false,
       "origin": "thirdparty:govtjobsalert"
@@ -47,7 +47,7 @@
       "emailed": true,
       "pendingRetry": false,
       "firstSeen": "2026-09-14T10:04:58.538Z",
-      "lastSeen": "2026-09-14T10:04:58.538Z",
+      "lastSeen": "2026-09-14T20:22:35.216Z",
       "provisional": true,
       "admitCard": false,
       "origin": "thirdparty:testbook"
