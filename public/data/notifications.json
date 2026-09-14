@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-13T18:52:27.086Z",
+  "updatedAt": "2026-09-14T10:05:02.658Z",
   "records": {
     "provisional::UPSC::CDS::admit": {
       "force": "UPSC",
@@ -13,7 +13,7 @@
       "emailed": true,
       "pendingRetry": false,
       "firstSeen": "2026-09-11T13:22:49.814Z",
-      "lastSeen": "2026-09-13T18:52:27.085Z",
+      "lastSeen": "2026-09-14T10:05:02.658Z",
       "provisional": true,
       "admitCard": true,
       "origin": "thirdparty:testbook"
@@ -30,10 +30,27 @@
       "emailed": true,
       "pendingRetry": false,
       "firstSeen": "2026-09-13T09:41:21.803Z",
-      "lastSeen": "2026-09-13T18:52:23.077Z",
+      "lastSeen": "2026-09-14T10:04:57.539Z",
       "provisional": true,
       "admitCard": false,
       "origin": "thirdparty:govtjobsalert"
+    },
+    "provisional::UPSC::CDS": {
+      "force": "UPSC",
+      "exam": "CDS",
+      "subCode": "CDS",
+      "title": "CDS 2 Notification 2026 Out, 451 Vacancies, Apply Online Link Active @upsc.gov.in",
+      "status": "UNCONFIRMED",
+      "reason": "Any bachelor’s degree entry (unconfirmed) – likely eligible; verify.",
+      "url": "https://testbook.com/news/cds-2-notification-2026-out/",
+      "hash": "c0df2646b12a0caba8fe5df66a37f9d3fdea627de825454cec6738156d6ddfb1",
+      "emailed": true,
+      "pendingRetry": false,
+      "firstSeen": "2026-09-14T10:04:58.538Z",
+      "lastSeen": "2026-09-14T10:04:58.538Z",
+      "provisional": true,
+      "admitCard": false,
+      "origin": "thirdparty:testbook"
     }
   }
 }
