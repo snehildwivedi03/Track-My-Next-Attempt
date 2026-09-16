@@ -1,4 +1,23 @@
 {
-  "updatedAt": "2026-09-16T00:00:00.000Z",
-  "records": {}
+  "updatedAt": "2026-09-16T09:27:47.709Z",
+  "records": {
+    "provisional::UPSC::CDS": {
+      "force": "UPSC",
+      "exam": "CDS",
+      "subCode": "CDS",
+      "title": "CDS 2 Notification 2026 Out, 451 Vacancies, Apply Online Link Active @upsc.gov.in",
+      "status": "UNCONFIRMED",
+      "reason": "Any bachelor’s degree entry (unconfirmed) – likely eligible; verify.",
+      "url": "https://testbook.com/news/cds-2-notification-2026-out/",
+      "hash": "c0df2646b12a0caba8fe5df66a37f9d3fdea627de825454cec6738156d6ddfb1",
+      "emailed": true,
+      "pendingRetry": false,
+      "examDate": null,
+      "firstSeen": "2026-09-16T09:27:42.730Z",
+      "lastSeen": "2026-09-16T09:27:42.730Z",
+      "provisional": true,
+      "admitCard": false,
+      "origin": "thirdparty:testbook"
+    }
+  }
 }
