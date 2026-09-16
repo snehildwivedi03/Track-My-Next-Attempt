@@ -8,7 +8,7 @@ const { sendResult, sendProvisional } = require('./email');
 const { load, save, prune, provisionalKey, hasConfirmedExam, upgradeProvisional } = require('./store');
 const { sha256 } = require('./util');
 const { fetchThirdPartyListings } = require('./thirdparty');
-const { cleanState, isApplicationClosed } = require('./cleaner');
+const { cleanState, isApplicationClosed, examDate, hasPassed } = require('./cleaner');
 // Only follow links that look like a notification (PDF or advert page).
 function looksLikeNotification(href, text) {
   const blob = `${href} ${text}`;
@@ -66,6 +66,17 @@ async function processLink(source, exam, link, state) {
   const admitCard = isAdmitCard(`${link.text} ${text.slice(0, 3000)}`);
   const closed = isClosed(`${link.text} ${text.slice(0, 3000)}`);
 
+  // Read the exam date from the notification body. Once the exam day is past the
+  // entry is dead (even an admit card) -> drop every sub-record and skip.
+  const examDateVal = examDate(text);
+  if (examDateVal && hasPassed(examDateVal)) {
+    for (const sub of exam.subEntries) {
+      delete state.records[sha256(`${notifId}::${sub.code}`)];
+    }
+    console.log(`  - skipped (exam already held): ${exam.exam} :: ${link.text.slice(0, 60)}`);
+    return;
+  }
+
   // Application window has ended (and it is not an admit card) -> no alert.
   // Drop any stale record so the website stops showing the dead entry.
   if (closed && !admitCard) {
@@ -86,6 +97,7 @@ async function processLink(source, exam, link, state) {
     if (prev && !prev.pendingRetry) {
       prev.lastSeen = nowIso;
       prev.hash = hash;
+      if (examDateVal) prev.examDate = examDateVal.toISOString();
       continue;
     }
 
@@ -131,6 +143,7 @@ async function processLink(source, exam, link, state) {
       emailed: emailSent,
       pendingRetry: emailAllowed && !emailSent,
       admitCard,
+      examDate: examDateVal ? examDateVal.toISOString() : (prev && prev.examDate) || null,
       firstSeen: prev ? prev.firstSeen : nowIso,
       lastSeen: nowIso,
       changed: !!prev,
@@ -173,14 +186,24 @@ async function handleThirdPartyListing(item, state) {
   const closed = isClosed(item.title);
   const key = provisionalKey(item.force, item.matchedExamCode, admit ? 'admit' : 'notice');
 
-  // The headline rarely carries the deadline, so for a notification read the
-  // aggregator's detail page and treat a past application last-date as closed.
+  // The headline rarely carries the deadline or the exam date, so read the
+  // aggregator's detail page once and reuse it for both lifecycle checks.
+  let detailText = '';
+  try {
+    const detail = await extractText(item.url);
+    if (!detail.startsWith('__FETCH_ERROR__')) detailText = detail;
+  } catch { /* keep the item on any fetch/parse failure */ }
+
   let windowOver = closed;
-  if (!admit && !windowOver) {
-    try {
-      const detail = await extractText(item.url);
-      if (!detail.startsWith('__FETCH_ERROR__') && isApplicationClosed(detail)) windowOver = true;
-    } catch { /* keep the item on any fetch/parse failure */ }
+  if (!admit && !windowOver && detailText && isApplicationClosed(detailText)) windowOver = true;
+
+  // Exam-date lifecycle: the moment the exam day is past, the entry is dead --
+  // this is what retires admit cards (e.g. CDS 2) right after the exam is held.
+  const examDateVal = examDate(`${item.title} ${detailText}`);
+  if (examDateVal && hasPassed(examDateVal)) {
+    delete state.records[key];
+    console.log(`  - skipped (exam already held): ${item.matchedExamCode}`);
+    return { action: 'exam-over-skip', exam: item.matchedExamCode, item };
   }
 
   // Application window has ended (and it is not an admit card) -> no alert.
@@ -207,6 +230,7 @@ async function handleThirdPartyListing(item, state) {
     prev.lastSeen = nowIso;
     prev.title = item.title;
     prev.url = item.url;
+    if (examDateVal) prev.examDate = examDateVal.toISOString();
     return { action: 'provisional-refresh', exam: item.matchedExamCode, item };
   }
 
@@ -257,6 +281,7 @@ async function handleThirdPartyListing(item, state) {
     hash: sha256(`${item.url}|${item.title}`),
     emailed: emailSent,
     pendingRetry: emailAllowed && !emailSent,
+    examDate: examDateVal ? examDateVal.toISOString() : (prev && prev.examDate) || null,
     firstSeen: prev ? prev.firstSeen : nowIso,
     lastSeen: nowIso,
     provisional: true,

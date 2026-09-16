@@ -134,6 +134,57 @@ function isApplicationClosed(text, now = new Date()) {
   return !!dl && dl.getTime() < now.getTime();
 }
 
+// Midnight (UTC) of a given date -- so comparisons are whole-day, not by hour.
+function startOfUTCDay(d) {
+  const x = d instanceof Date ? d : new Date(d);
+  return Date.UTC(x.getUTCFullYear(), x.getUTCMonth(), x.getUTCDate());
+}
+
+// True when `date` (a Date or ISO string) falls strictly before today's UTC day.
+// "The exam is on the 13th, today is the 16th" -> passed. Same day -> not passed.
+function hasPassed(date, now = new Date()) {
+  if (!date) return false;
+  const d = date instanceof Date ? date : new Date(date);
+  if (isNaN(d)) return false;
+  return startOfUTCDay(d) < startOfUTCDay(now);
+}
+
+// Find the date the exam / written test / CBT is (or was) held. Notifications and
+// aggregators phrase this many ways ("exam date", "will be held on", "CBT on",
+// "date of examination"), so match a label and take the nearest date. Returns the
+// LATEST such date (a multi-day exam ends on its last day) or null.
+function examDate(text, now) {
+  const s = String(text || '');
+  if (!s) return null;
+  const found = [];
+  const re = new RegExp(
+    '(?:' +
+      'date\\s*of\\s*(?:the\\s*)?(?:written\\s*)?(?:exam(?:ination)?|test|cbt)' +
+      '|(?:written\\s*)?exam(?:ination)?\\s*date' +
+      '|(?:written\\s*)?(?:exam(?:ination)?|test|cbt)\\s*(?:is|will\\s*be|to\\s*be|shall\\s*be)?\\s*(?:held|conducted|scheduled)' +
+      '|(?:exam(?:ination)?|test|cbt)\\s*(?:is\\s*)?(?:scheduled|held|conducted)\\s*(?:on|for)?' +
+      '|(?:will\\s*be|to\\s*be|shall\\s*be)\\s*(?:held|conducted)\\s*on' +
+    ')\\b[^0-9]{0,25}?' + DATE_TOKEN,
+    'gi'
+  );
+  let m;
+  while ((m = re.exec(s)) !== null) {
+    const d = newestDate(m[1], now);
+    if (d) found.push(d);
+  }
+  if (!found.length) return null;
+  return found.reduce((a, b) => (b > a ? b : a));
+}
+
+// True when a readable exam date is already in the past (the exam day is over).
+function isExamOver(text, now = new Date()) {
+  return hasPassed(examDate(text, now), now);
+}
+
+// An admit card first seen more than this many days ago is for an exam that has
+// certainly been held -- a safety net for when no exam date is machine-readable.
+const ADMIT_STALE_DAYS = 21;
+
 // True when the entry has clearly expired: the newest date it references is
 // more than STALE_DAYS in the past. No readable date -> not stale (we never drop
 // on a guess). A future date -> not stale (window still open / exam ahead).
@@ -151,6 +202,28 @@ function cleanState(state, now = new Date()) {
   let removed = 0;
   for (const [key, rec] of Object.entries(state.records)) {
     const blob = `${rec.title || ''} ${rec.reason || ''}`;
+
+    // 1) A recorded exam date that has passed -> the exam is over (covers admit
+    //    cards, whose headline carries no readable date).
+    if (rec.examDate && hasPassed(rec.examDate, now)) {
+      delete state.records[key];
+      removed++;
+      console.log(`  - cleaned record (exam date passed): ${rec.exam} :: ${(rec.title || '').slice(0, 50)}`);
+      continue;
+    }
+
+    // 2) An admit card first seen long ago -> its exam has certainly been held.
+    if (rec.admitCard && rec.firstSeen) {
+      const ageDays = Math.floor((now.getTime() - new Date(rec.firstSeen).getTime()) / 86400000);
+      if (ageDays > ADMIT_STALE_DAYS) {
+        delete state.records[key];
+        removed++;
+        console.log(`  - cleaned admit card (exam over, ${ageDays}d old): ${rec.exam} :: ${(rec.title || '').slice(0, 50)}`);
+        continue;
+      }
+    }
+
+    // 3) The newest date anywhere in the text is well past -> window/exam over.
     if (isStale(blob, now)) {
       delete state.records[key];
       removed++;
@@ -161,4 +234,4 @@ function cleanState(state, now = new Date()) {
   return removed;
 }
 
-module.exports = { isStale, newestDate, extractDates, applicationDeadline, isApplicationClosed, cleanState, STALE_DAYS, MONTHS };
+module.exports = { isStale, newestDate, extractDates, applicationDeadline, isApplicationClosed, examDate, isExamOver, hasPassed, cleanState, STALE_DAYS, ADMIT_STALE_DAYS, MONTHS };

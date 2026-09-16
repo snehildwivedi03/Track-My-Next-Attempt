@@ -37,7 +37,7 @@ const { fetchThirdPartyListings, buildConcludedSet, buildLatestCycle, isSupersed
 const { processThirdParty } = require('../src/track');
 const { buildProvisionalEmail } = require('../src/email');
 const { hasConfirmedExam, upgradeProvisional, provisionalKey } = require('../src/store');
-const { isStale, newestDate, cleanState, applicationDeadline, isApplicationClosed } = require('../src/cleaner');
+const { isStale, newestDate, cleanState, applicationDeadline, isApplicationClosed, examDate, isExamOver, hasPassed } = require('../src/cleaner');
 const {
   passesEmailGate,
   profileQualifies,
@@ -273,6 +273,30 @@ function pass(msg) {
     'exact day parsed (not swallowed by the year)'
   );
   pass('detail-page deadline parser flags expired application windows');
+
+  // 14. Exam-date lifecycle: once the exam day is past the entry is dead, even an
+  //     admit card whose headline carries no date (the CDS-2-after-the-exam case).
+  const asOfExam = new Date('2026-09-16T00:00:00Z');
+  assert.strictEqual(examDate('CDS 2 exam will be held on 13 September 2026', asOfExam).getUTCDate(), 13, 'exam date read from body');
+  assert.strictEqual(isExamOver('Written examination scheduled on 13 September 2026', asOfExam), true, 'past exam date -> over');
+  assert.strictEqual(isExamOver('Exam Date 20 December 2026', asOfExam), false, 'future exam date -> not over');
+  assert.strictEqual(isExamOver('No exam date printed here', asOfExam), false, 'no exam date -> not over');
+  assert.strictEqual(hasPassed('2026-09-13T00:00:00Z', asOfExam), true, 'stored date before today -> passed');
+  assert.strictEqual(hasPassed('2026-09-16T00:00:00Z', asOfExam), false, 'same day -> not passed');
+
+  const examTarget = {
+    records: {
+      heldExam: { force: 'UPSC', exam: 'CDS', title: 'CDS 2 Admit Card 2026', reason: '', admitCard: true, examDate: '2026-09-13T00:00:00Z', firstSeen: asOfExam.toISOString() },
+      oldAdmit: { force: 'UPSC', exam: 'NDA', title: 'NDA Admit Card', reason: '', admitCard: true, firstSeen: '2026-08-01T00:00:00Z' },
+      upcoming: { force: 'IAF', exam: 'AFCAT', title: 'AFCAT Admit Card', reason: '', admitCard: true, examDate: '2026-12-20T00:00:00Z', firstSeen: asOfExam.toISOString() },
+    },
+  };
+  const examRemoved = cleanState(examTarget, asOfExam);
+  assert.strictEqual(examRemoved, 2, 'held-exam and long-stale admit cards cleaned');
+  assert.ok(!examTarget.records.heldExam, 'admit card removed once exam date passed');
+  assert.ok(!examTarget.records.oldAdmit, 'admit card older than the safety net removed');
+  assert.ok(examTarget.records.upcoming, 'admit card for a future exam retained');
+  pass('exam-date lifecycle retires held exams and long-stale admit cards');
 
   console.log('\nAll third-party tests passed.');
 })().catch((err) => {
