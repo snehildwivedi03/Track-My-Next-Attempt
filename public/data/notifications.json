@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-18T09:09:45.032Z",
+  "updatedAt": "2026-09-18T19:06:20.575Z",
   "records": {
     "provisional::Indian Navy::SSC Officer": {
       "force": "Indian Navy",
@@ -14,7 +14,7 @@
       "pendingRetry": false,
       "examDate": "2026-09-30T00:00:00.000Z",
       "firstSeen": "2026-09-17T19:47:19.741Z",
-      "lastSeen": "2026-09-18T09:09:41.466Z",
+      "lastSeen": "2026-09-18T19:06:17.920Z",
       "provisional": true,
       "admitCard": false,
       "origin": "thirdparty:govtjobsalert"
