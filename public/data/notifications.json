@@ -1,24 +1,6 @@
 {
-  "updatedAt": "2026-09-22T09:26:56.686Z",
+  "updatedAt": "2026-09-22T19:48:39.267Z",
   "records": {
-    "provisional::Indian Navy::SSC Officer": {
-      "force": "Indian Navy",
-      "exam": "SSC Officer",
-      "subCode": "SSC Officer",
-      "title": "▶ICICI Lombard is Hiring Sales Executive – Tele-Sales 2026!",
-      "status": "UNCONFIRMED",
-      "reason": "Any bachelor’s degree entry (unconfirmed) – likely eligible; verify.",
-      "url": "https://govtjobsalert.in/icici-lombard-sales-executive",
-      "hash": "1ffb93128800d64ae45f0414f8d3206bc0a3e68a4318266e668ff5ce2846a3b7",
-      "emailed": true,
-      "pendingRetry": false,
-      "examDate": "2026-09-30T00:00:00.000Z",
-      "firstSeen": "2026-09-17T19:47:19.741Z",
-      "lastSeen": "2026-09-21T10:09:51.716Z",
-      "provisional": true,
-      "admitCard": false,
-      "origin": "thirdparty:govtjobsalert"
-    },
     "provisional::Indian Army::TGC": {
       "force": "Indian Army",
       "exam": "TGC",
@@ -32,7 +14,7 @@
       "pendingRetry": false,
       "examDate": null,
       "firstSeen": "2026-09-22T09:26:50.136Z",
-      "lastSeen": "2026-09-22T09:26:50.136Z",
+      "lastSeen": "2026-09-22T19:48:36.762Z",
       "provisional": true,
       "admitCard": false,
       "origin": "thirdparty:testbook"
