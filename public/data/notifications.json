@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-21T20:29:51.784Z",
+  "updatedAt": "2026-09-22T09:26:56.686Z",
   "records": {
     "provisional::Indian Navy::SSC Officer": {
       "force": "Indian Navy",
@@ -18,6 +18,24 @@
       "provisional": true,
       "admitCard": false,
       "origin": "thirdparty:govtjobsalert"
+    },
+    "provisional::Indian Army::TGC": {
+      "force": "Indian Army",
+      "exam": "TGC",
+      "subCode": "TGC",
+      "title": "Indian Army TGC 144 Notification 2026 Out, Apply Link Active and Check Eligibility",
+      "status": "UNCONFIRMED",
+      "reason": "Engineering entry (unconfirmed) – verify CSE is in the discipline list.",
+      "url": "https://testbook.com/news/indian-army-tgc-144-notification-2026/",
+      "hash": "ba73994dfdc92b5e76e93a1afead503cb57ca087fc699adbbd2723351909b0f8",
+      "emailed": true,
+      "pendingRetry": false,
+      "examDate": null,
+      "firstSeen": "2026-09-22T09:26:50.136Z",
+      "lastSeen": "2026-09-22T09:26:50.136Z",
+      "provisional": true,
+      "admitCard": false,
+      "origin": "thirdparty:testbook"
     }
   }
 }
