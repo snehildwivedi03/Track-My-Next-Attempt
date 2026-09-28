@@ -35,7 +35,11 @@ function render() {
   const rows = records
     .filter((r) => {
       if (filter === 'ALL') return true;
-      if (filter === 'ADMIT CARD') return !!r.admitCard || /admit\s*card/i.test(r.status || '');
+      const isAdmit = !!r.admitCard || /admit\s*card/i.test(r.status || '');
+      if (filter === 'ADMIT CARD') return isAdmit;
+      // "Uncertain" groups both official eligibility-uncertain and third-party
+      // unconfirmed (provisional) entries -- the ones alerted but not yet scored.
+      if (filter === 'UNCERTAIN') return !isAdmit && /uncertain|unconfirmed/i.test(r.status || '');
       return r.status === filter;
     })
     .sort((a, b) => new Date(b.lastSeen) - new Date(a.lastSeen));
@@ -80,7 +84,7 @@ function esc(s) {
 }
 
 function buildFilters() {
-  const opts = ['ALL', 'ADMIT CARD', 'ELIGIBLE', 'NOT ELIGIBLE', 'ELIGIBILITY UNCERTAIN'];
+  const opts = ['ALL', 'ADMIT CARD', 'ELIGIBLE', 'NOT ELIGIBLE', 'UNCERTAIN'];
   filtersEl.innerHTML = opts
     .map((o) => `<button data-f="${o}"${o === filter ? ' class="active"' : ''}>${o.toLowerCase()}</button>`)
     .join('');
