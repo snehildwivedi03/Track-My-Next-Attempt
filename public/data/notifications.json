@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-29T10:52:08.205Z",
+  "updatedAt": "2026-09-29T20:56:57.648Z",
   "records": {
     "provisional::Indian Army::TGC": {
       "force": "Indian Army",
@@ -14,27 +14,10 @@
       "pendingRetry": false,
       "examDate": null,
       "firstSeen": "2026-09-22T09:26:50.136Z",
-      "lastSeen": "2026-09-29T10:52:02.346Z",
+      "lastSeen": "2026-09-29T20:56:55.157Z",
       "provisional": true,
       "admitCard": false,
       "origin": "thirdparty:testbook"
-    },
-    "a8ed99ddaae43db0a017c0e07f80e94f9f43db639f999f8cef16b3afacc86352": {
-      "force": "Indian Navy",
-      "exam": "SSC Officer",
-      "subCode": "SSC",
-      "title": "SSC - Jun 27 Course - Callups for SSBs scheduled in Nov - Dec 26 issued. Login to download.",
-      "status": "ELIGIBILITY UNCERTAIN",
-      "reason": "Age: Age/DOB window could not be read from the notification. | Qualification: Any bachelor’s degree accepted; B.Tech CSE qualifies. | NCC: No (not required for this entry).",
-      "url": "https://www.joinindiannavy.gov.in/en/event/ssc-jun-27-course-callups-for-ssbs-scheduled-in-nov-dec-26-issued-login-to-download.html",
-      "hash": "54be7b477a3268beeeddc070ea7b832f535814f3c22fef65e2098ac704646529",
-      "emailed": true,
-      "pendingRetry": false,
-      "admitCard": false,
-      "examDate": null,
-      "firstSeen": "2026-09-27T19:49:30.006Z",
-      "lastSeen": "2026-09-27T19:49:30.006Z",
-      "changed": false
     }
   }
 }
