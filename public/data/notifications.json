@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-05T22:49:06.361Z",
+  "updatedAt": "2026-10-06T11:27:41.290Z",
   "records": {
     "provisional::Indian Army::TGC": {
       "force": "Indian Army",
@@ -14,7 +14,7 @@
       "pendingRetry": false,
       "examDate": "2026-11-30T00:00:00.000Z",
       "firstSeen": "2026-09-22T09:26:50.136Z",
-      "lastSeen": "2026-10-05T22:49:04.004Z",
+      "lastSeen": "2026-10-06T11:27:34.105Z",
       "provisional": true,
       "admitCard": false,
       "origin": "thirdparty:testbook"
@@ -23,16 +23,16 @@
       "force": "Indian Navy",
       "exam": "SSC Officer",
       "subCode": "SSC Officer",
-      "title": "▶IIM Sirmaur Recruitment 2026 (Advt 03/2026) – 8 Medical Officer, Research Associate & Accreditation Executive Posts, Last Date 12 Oct",
+      "title": "ICG CGEPT Recruitment 2026 Notification Out, 365 Vacancies, Apply Online Link Active @ssc.gov.in",
       "status": "UNCONFIRMED",
       "reason": "Any bachelor’s degree entry (unconfirmed) – likely eligible; verify.",
-      "url": "https://govtjobsalert.in/iim-sirmaur-medical-officer-recruitment-2026/",
+      "url": "https://testbook.com/news/indian-coast-guard-recruitment-2026-out/",
       "hash": "57dc35fe77f6177d3edb964b46533d8f76de40b551f826fa570ad8a24197d362",
       "emailed": true,
       "pendingRetry": false,
       "examDate": "2026-11-30T00:00:00.000Z",
       "firstSeen": "2026-10-05T22:49:02.020Z",
-      "lastSeen": "2026-10-05T22:49:02.020Z",
+      "lastSeen": "2026-10-06T11:27:32.596Z",
       "provisional": true,
       "admitCard": false,
       "origin": "thirdparty:govtjobsalert"
