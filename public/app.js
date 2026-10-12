@@ -31,8 +31,27 @@ function tagClass(status) {
   return 'maybe';
 }
 
+// A record is dead once its application window has closed or its exam day is past
+// (compared whole-day, UTC). The tracker prunes these from the JSON, but this is a
+// front-end safety net so a stale entry is never shown even if a run hasn't cleaned
+// it yet. Admit cards are exempt from the deadline check (their window is over by
+// design) but still hidden once the exam date passes.
+function isExpired(r) {
+  const today = Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth(), new Date().getUTCDate());
+  const passed = (v) => {
+    if (!v) return false;
+    const d = new Date(v);
+    if (isNaN(d)) return false;
+    return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) < today;
+  };
+  if (passed(r.examDate)) return true;
+  if (!r.admitCard && passed(r.closesOn)) return true;
+  return false;
+}
+
 function render() {
   const rows = records
+    .filter((r) => !isExpired(r))
     .filter((r) => {
       if (filter === 'ALL') return true;
       const isAdmit = !!r.admitCard || /admit\s*card/i.test(r.status || '');

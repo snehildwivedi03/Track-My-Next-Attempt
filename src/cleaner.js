@@ -48,8 +48,8 @@ function extractDates(text, now) {
   const fallbackYear = yearHit ? Number(yearHit[1]) : (now || new Date()).getUTCFullYear();
   const dates = [];
 
-  // "16 May 2026", "16 मई", "16-May", "16 May,"
-  const dayMonth = /(?<!\d)(\d{1,2})\s*[-/.]?\s*([A-Za-z\u0900-\u097F]{2,20})\.?(?:[\s,\-/]+(\d{4}))?/g;
+  // "16 May 2026", "16th May", "16 मई", "16-May", "16 May,"
+  const dayMonth = /(?<!\d)(\d{1,2})(?:st|nd|rd|th)?\s*[-/.]?\s*([A-Za-z\u0900-\u097F]{2,20})\.?(?:[\s,\-/]+(\d{4}))?/gi;
   let m;
   while ((m = dayMonth.exec(s)) !== null) {
     const day = Number(m[1]);
@@ -59,8 +59,8 @@ function extractDates(text, now) {
     dates.push(new Date(Date.UTC(year, mon, day)));
   }
 
-  // "September 16, 2026" / "May 16 2026" (the day must not be part of a year)
-  const monthDay = /([A-Za-z\u0900-\u097F]{3,20})\.?\s+(\d{1,2})(?!\d)(?:[\s,\-/]+(\d{4}))?/g;
+  // "September 16, 2026" / "May 16th 2026" (the day must not be part of a year)
+  const monthDay = /([A-Za-z\u0900-\u097F]{3,20})\.?\s+(\d{1,2})(?:st|nd|rd|th)?(?!\d)(?:[\s,\-/]+(\d{4}))?/gi;
   while ((m = monthDay.exec(s)) !== null) {
     const mon = MONTHS[m[1].toLowerCase()];
     const day = Number(m[2]);
@@ -90,8 +90,9 @@ function newestDate(text, now) {
 }
 
 // A calendar date as it appears inside a sentence (day-month[-year], or numeric).
+// The day may carry an ordinal suffix ("11th June", "1st April").
 const DATE_TOKEN =
-  '(\\d{1,2}\\s+[A-Za-z\\u0900-\\u097F]{3,20}\\.?(?:\\s+20\\d{2})?|20\\d{2}[-/.]\\d{1,2}[-/.]\\d{1,2}|\\d{1,2}[-/.]\\d{1,2}[-/.]20\\d{2})';
+  '(\\d{1,2}(?:st|nd|rd|th)?\\s+[A-Za-z\\u0900-\\u097F]{3,20}\\.?(?:\\s+20\\d{2})?|20\\d{2}[-/.]\\d{1,2}[-/.]\\d{1,2}|\\d{1,2}[-/.]\\d{1,2}[-/.]20\\d{2})';
 
 // Find the application closing date on a notification / detail page. Aggregators
 // rarely put it in the headline, so this reads the article body. It looks at two
@@ -202,6 +203,17 @@ function cleanState(state, now = new Date()) {
   let removed = 0;
   for (const [key, rec] of Object.entries(state.records)) {
     const blob = `${rec.title || ''} ${rec.reason || ''}`;
+
+    // 0) A recorded application deadline that has passed -> the window is closed.
+    //    Stored once the deadline was readable, so the entry is retired even if
+    //    the aggregator keeps re-listing it and the detail page later fails to
+    //    load (admit cards are exempt -- their window is already over by design).
+    if (!rec.admitCard && rec.closesOn && hasPassed(rec.closesOn, now)) {
+      delete state.records[key];
+      removed++;
+      console.log(`  - cleaned record (application window closed): ${rec.exam} :: ${(rec.title || '').slice(0, 50)}`);
+      continue;
+    }
 
     // 1) A recorded exam date that has passed -> the exam is over (covers admit
     //    cards, whose headline carries no readable date).

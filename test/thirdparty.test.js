@@ -325,6 +325,33 @@ function pass(msg) {
   assert.ok(!pruneTarget.records.staleEmailed, 'emailed item still pruned once truly old');
   pass('emailed entries persist on the website until the lifecycle cleaner / long window');
 
+  // 17. Ordinal dates ("11th June", "13th May", "1st April") are parsed. These are
+  //     how testbook phrases the apply window, and the old parser missed them -- so
+  //     a closed window (Army TGC: 13th May - 11th June) was never detected.
+  const asOfOrd = new Date('2026-10-13T00:00:00Z');
+  assert.strictEqual(newestDate('apply by 11th June 2026', asOfOrd).getUTCDate(), 11, 'ordinal "11th June" parsed');
+  assert.strictEqual(newestDate('from 13th May 2026', asOfOrd).getUTCMonth(), 4, 'ordinal "13th May" parsed');
+  assert.strictEqual(newestDate('closes 1st April 2026', asOfOrd).getUTCMonth(), 3, 'ordinal "1st April" parsed');
+  assert.strictEqual(newestDate('exam on June 11th 2026', asOfOrd).getUTCDate(), 11, 'ordinal "June 11th" parsed');
+  const tgcBody = 'The Application Window to apply online is open from 13th May to 11th June 2026.';
+  assert.ok(applicationDeadline(tgcBody, asOfOrd), 'ordinal apply-window deadline is found');
+  assert.strictEqual(applicationDeadline(tgcBody, asOfOrd).getUTCDate(), 11, 'TGC deadline resolves to 11 June');
+  assert.strictEqual(isApplicationClosed(tgcBody, asOfOrd), true, 'TGC window (ended 11 June) is closed by 13 Oct');
+
+  // A stored closesOn in the past retires the record even if the detail page can
+  // no longer be fetched -- the Army TGC 144 case the user reported.
+  const closesTarget = {
+    records: {
+      tgc: { force: 'Indian Army', exam: 'TGC', title: 'Indian Army TGC 144 Notification 2026', reason: '', provisional: true, admitCard: false, closesOn: '2026-06-11T00:00:00.000Z', examDate: null },
+      openEntry: { force: 'UPSC', exam: 'CDS', title: 'CDS 1 2027 Notification', reason: '', provisional: true, admitCard: false, closesOn: '2027-01-20T00:00:00.000Z' },
+    },
+  };
+  const closesRemoved = cleanState(closesTarget, asOfOrd);
+  assert.strictEqual(closesRemoved, 1, 'exactly the closed-window record cleaned');
+  assert.ok(!closesTarget.records.tgc, 'TGC retired once its stored closesOn passed');
+  assert.ok(closesTarget.records.openEntry, 'an entry whose window is still open is retained');
+  pass('ordinal dates parsed; stored closesOn retires closed-window entries (Army TGC fix)');
+
   console.log('\nAll third-party tests passed.');
 })().catch((err) => {
   console.error('TEST FAILED:', err && err.stack ? err.stack : err);

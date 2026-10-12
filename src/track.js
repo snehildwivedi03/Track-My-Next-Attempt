@@ -8,7 +8,7 @@ const { sendResult, sendProvisional } = require('./email');
 const { load, save, prune, provisionalKey, hasConfirmedExam, upgradeProvisional } = require('./store');
 const { sha256 } = require('./util');
 const { fetchThirdPartyListings } = require('./thirdparty');
-const { cleanState, isApplicationClosed, examDate, hasPassed } = require('./cleaner');
+const { cleanState, applicationDeadline, examDate, hasPassed } = require('./cleaner');
 // Only follow links that look like a notification (PDF or advert page).
 function looksLikeNotification(href, text) {
   const blob = `${href} ${text}`;
@@ -77,6 +77,10 @@ async function processLink(source, exam, link, state) {
     return;
   }
 
+  // Read the application deadline too, so a closed window retires the entry even
+  // on a later run when the detail page fails to load (the date is stored).
+  const closesOnVal = applicationDeadline(text);
+
   // Application window has ended (and it is not an admit card) -> no alert.
   // Drop any stale record so the website stops showing the dead entry.
   if (closed && !admitCard) {
@@ -98,6 +102,7 @@ async function processLink(source, exam, link, state) {
       prev.lastSeen = nowIso;
       prev.hash = hash;
       if (examDateVal) prev.examDate = examDateVal.toISOString();
+      if (closesOnVal) prev.closesOn = closesOnVal.toISOString();
       continue;
     }
 
@@ -144,6 +149,7 @@ async function processLink(source, exam, link, state) {
       pendingRetry: emailAllowed && !emailSent,
       admitCard,
       examDate: examDateVal ? examDateVal.toISOString() : (prev && prev.examDate) || null,
+      closesOn: closesOnVal ? closesOnVal.toISOString() : (prev && prev.closesOn) || null,
       firstSeen: prev ? prev.firstSeen : nowIso,
       lastSeen: nowIso,
       changed: !!prev,
@@ -195,7 +201,8 @@ async function handleThirdPartyListing(item, state) {
   } catch { /* keep the item on any fetch/parse failure */ }
 
   let windowOver = closed;
-  if (!admit && !windowOver && detailText && isApplicationClosed(detailText)) windowOver = true;
+  const closesOnVal = detailText ? applicationDeadline(detailText) : null;
+  if (!admit && !windowOver && closesOnVal && hasPassed(closesOnVal)) windowOver = true;
 
   // Exam-date lifecycle: the moment the exam day is past, the entry is dead --
   // this is what retires admit cards (e.g. CDS 2) right after the exam is held.
@@ -231,6 +238,7 @@ async function handleThirdPartyListing(item, state) {
     prev.title = item.title;
     prev.url = item.url;
     if (examDateVal) prev.examDate = examDateVal.toISOString();
+    if (closesOnVal) prev.closesOn = closesOnVal.toISOString();
     return { action: 'provisional-refresh', exam: item.matchedExamCode, item };
   }
 
@@ -282,6 +290,7 @@ async function handleThirdPartyListing(item, state) {
     emailed: emailSent,
     pendingRetry: emailAllowed && !emailSent,
     examDate: examDateVal ? examDateVal.toISOString() : (prev && prev.examDate) || null,
+    closesOn: closesOnVal ? closesOnVal.toISOString() : (prev && prev.closesOn) || null,
     firstSeen: prev ? prev.firstSeen : nowIso,
     lastSeen: nowIso,
     provisional: true,
