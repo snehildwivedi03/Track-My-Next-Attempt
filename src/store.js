@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { PRUNE_DAYS, PROVISIONAL_PRUNE_DAYS } = require('./config');
+const { PRUNE_DAYS, PROVISIONAL_PRUNE_DAYS, EMAILED_PRUNE_DAYS } = require('./config');
 
 const FILE = path.join(__dirname, '..', 'public', 'data', 'notifications.json');
 
@@ -29,9 +29,12 @@ function prune(data) {
   const now = Date.now();
   const cutoff = now - PRUNE_DAYS * 86400000;
   const provCutoff = now - PROVISIONAL_PRUNE_DAYS * 86400000;
+  const emailedCutoff = now - EMAILED_PRUNE_DAYS * 86400000;
   let removed = 0;
   for (const [key, rec] of Object.entries(data.records)) {
-    const limit = rec.provisional ? provCutoff : cutoff;
+    // Keep what we alerted on for a long window; unemailed provisional noise
+    // gets the short window; everything else the normal one.
+    const limit = rec.emailed ? emailedCutoff : rec.provisional ? provCutoff : cutoff;
     if (!rec.lastSeen || new Date(rec.lastSeen).getTime() < limit) {
       delete data.records[key];
       removed++;

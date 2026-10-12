@@ -20,6 +20,12 @@ const PRUNE_DAYS = 2;
 // more likely noise (rumor / coaching post / misclassification) than real.
 const PROVISIONAL_PRUNE_DAYS = 1;
 
+// Anything we actually ALERTED on (emailed) stays visible for this long after it
+// was last seen, so the website always reflects what was emailed even once the
+// aggregator scrolls the listing off. Dated/closed items are removed earlier by
+// the lifecycle cleaner regardless of this window.
+const EMAILED_PRUNE_DAYS = 30;
+
 // Qualification handling per sub-entry:
 //   'graduate'    -> any bachelor's degree qualifies (CSE is fine)
 //   'engineering' -> engineering degree AND the CSE discipline must be listed
@@ -121,4 +127,4 @@ const THIRD_PARTY_SOURCES = [
   },
 ];
 
-module.exports = { PROFILE, PRUNE_DAYS, PROVISIONAL_PRUNE_DAYS, SOURCES, EXCLUDE, THIRD_PARTY_SOURCES };
+module.exports = { PROFILE, PRUNE_DAYS, PROVISIONAL_PRUNE_DAYS, EMAILED_PRUNE_DAYS, SOURCES, EXCLUDE, THIRD_PARTY_SOURCES };

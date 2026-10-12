@@ -27,6 +27,12 @@ const NOISE = /previous\s*year|previous\s*paper|question\s*paper|answer\s*key|re
 // Those are never officer-entry defence notifications, so drop them outright.
 const SSC_CLERICAL = /\bchsl\b|\bcgl\b|\bmts\b|constable|stenographer|\bcpo\b|sub-?inspector|junior\s*engineer|\bje\b|havaldar|selection\s*post|multi\s*tasking|delhi\s*police|\bgd\b|head\s*constable|\bldc\b|\bdeo\b|scientific\s*assistant/i;
 
+// Organisations we do not track as officer entries. Their titles often contain
+// generic words ("ssc", "technical") that would otherwise be mis-matched onto a
+// defence exam (e.g. Indian Coast Guard "ICG CGEPT ... at ssc.gov.in" tagged as
+// Navy SSC Officer, or an ISRO technician post). Drop them outright.
+const OUT_OF_SCOPE = /coast\s*guard|\bicg\b|cgept|\bnavik\b|yantrik|\bisro\b|\bdrdo\b|\bssc\.gov\.in\b|staff\s*selection/i;
+
 const ADMIT = /admit\s*card|hall\s*ticket|e-?admit|call\s*letter/i;
 
 // A real posting is dated or names a concrete event (notification is out, admit
@@ -39,7 +45,7 @@ const SUBSTANCE = /\b20\d{2}\b|notification|admit\s*card|hall\s*ticket|call\s*le
 // pipeline uses: drop EXCLUDE/NOISE hits, otherwise return the first exam whose
 // `match` regex fires. Returns null when nothing (in scope) matches.
 function classifyTitle(title) {
-  if (!title || EXCLUDE.test(title) || NOISE.test(title) || SSC_CLERICAL.test(title)) return null;
+  if (!title || EXCLUDE.test(title) || NOISE.test(title) || SSC_CLERICAL.test(title) || OUT_OF_SCOPE.test(title)) return null;
   if (!SUBSTANCE.test(title)) return null; // generic nav/category anchor -> ignore.
   for (const source of SOURCES) {
     for (const exam of source.exams) {

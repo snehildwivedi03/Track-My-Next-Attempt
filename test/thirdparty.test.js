@@ -33,10 +33,10 @@ global.fetch = async (url) => {
   };
 };
 
-const { fetchThirdPartyListings, buildConcludedSet, buildLatestCycle, isSuperseded, editionKey, editionNumber, editionYear } = require('../src/thirdparty');
+const { fetchThirdPartyListings, classifyTitle, buildConcludedSet, buildLatestCycle, isSuperseded, editionKey, editionNumber, editionYear } = require('../src/thirdparty');
 const { processThirdParty } = require('../src/track');
 const { buildProvisionalEmail } = require('../src/email');
-const { hasConfirmedExam, upgradeProvisional, provisionalKey } = require('../src/store');
+const { hasConfirmedExam, upgradeProvisional, provisionalKey, prune } = require('../src/store');
 const { isStale, newestDate, cleanState, applicationDeadline, isApplicationClosed, examDate, isExamOver, hasPassed } = require('../src/cleaner');
 const {
   passesEmailGate,
@@ -297,6 +297,33 @@ function pass(msg) {
   assert.ok(!examTarget.records.oldAdmit, 'admit card older than the safety net removed');
   assert.ok(examTarget.records.upcoming, 'admit card for a future exam retained');
   pass('exam-date lifecycle retires held exams and long-stale admit cards');
+
+  // 15. Out-of-scope organisations must not be mis-tagged onto a defence exam.
+  //     The ICG "...at ssc.gov.in" title previously matched Navy SSC Officer.
+  assert.strictEqual(
+    classifyTitle('ICG CGEPT Recruitment 2026 Notification Out, 365 Vacancies, Apply Online Link Active at ssc.gov.in'),
+    null,
+    'Indian Coast Guard CGEPT is out of scope -> not classified as Navy SSC'
+  );
+  assert.strictEqual(classifyTitle('ISRO IPRC Technical Assistant Recruitment 2026 Out'), null, 'ISRO technician post dropped');
+  assert.ok(classifyTitle('Indian Army TGC 144 Technical Graduate Course Notification 2026'), 'a real defence exam still classifies');
+  pass('out-of-scope orgs (Coast Guard / ISRO) are not mis-tagged onto defence exams');
+
+  // 16. Anything emailed stays on the website well past the 1-day provisional
+  //     window, so the site always reflects what was alerted.
+  const day = 86400000;
+  const pruneTarget = {
+    records: {
+      emailedProv: { provisional: true, emailed: true, lastSeen: new Date(Date.now() - 5 * day).toISOString() },
+      silentProv: { provisional: true, emailed: false, lastSeen: new Date(Date.now() - 2 * day).toISOString() },
+      staleEmailed: { provisional: true, emailed: true, lastSeen: new Date(Date.now() - 40 * day).toISOString() },
+    },
+  };
+  prune(pruneTarget);
+  assert.ok(pruneTarget.records.emailedProv, 'emailed provisional kept past the 1-day window');
+  assert.ok(!pruneTarget.records.silentProv, 'un-emailed provisional noise still pruned after a day');
+  assert.ok(!pruneTarget.records.staleEmailed, 'emailed item still pruned once truly old');
+  pass('emailed entries persist on the website until the lifecycle cleaner / long window');
 
   console.log('\nAll third-party tests passed.');
 })().catch((err) => {
