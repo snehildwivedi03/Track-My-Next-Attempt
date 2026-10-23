@@ -1,21 +1,21 @@
 {
-  "updatedAt": "2026-10-22T20:14:21.601Z",
+  "updatedAt": "2026-10-23T09:30:07.668Z",
   "records": {
     "provisional::Indian Navy::SSC Officer": {
       "force": "Indian Navy",
       "exam": "SSC Officer",
       "subCode": "SSC Officer",
-      "title": "Job PostLast Date: 02 Nov 2026AWTM Recruitment 2026 – 40 Contractual Technical Trade Posts (Fitter, Machinist, Turner & Others): Offline Form Must Reach by 2 NovemberOrg: DefenceVacancy: 40Updated on 16 Oct 2026",
+      "title": "Job PostLast Date: 15 Nov 2026DRDO ARDE Pune Recruitment 2026 – 11 Consultant Posts for Retired Government Officials (Advt ARDE/CONSULTANT/2026/344-354): Technical & Admin ConsultantsOrg: DefenceVacancy: 11Updated on 23 Oct 2026",
       "status": "UNCONFIRMED",
       "reason": "Any bachelor’s degree entry (unconfirmed) – likely eligible; verify.",
-      "url": "https://govtjobsalert.in/awtm-recruitment-2026-contractual-technical-trade-posts/",
+      "url": "https://govtjobsalert.in/drdo-arde-pune-consultant-recruitment-2026/",
       "hash": "98e0007fe8072fffcc910316bf9f3b8ff2d5bda4036fb9e15476cb8937eaf756",
       "emailed": true,
       "pendingRetry": false,
       "examDate": null,
-      "closesOn": "2026-11-02T00:00:00.000Z",
+      "closesOn": "2026-11-15T00:00:00.000Z",
       "firstSeen": "2026-10-14T09:40:58.721Z",
-      "lastSeen": "2026-10-22T09:34:27.420Z",
+      "lastSeen": "2026-10-23T09:30:05.204Z",
       "provisional": true,
       "admitCard": false,
       "origin": "thirdparty:govtjobsalert"
