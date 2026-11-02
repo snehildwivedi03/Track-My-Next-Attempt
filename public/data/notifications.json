@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-01T20:40:53.250Z",
+  "updatedAt": "2026-11-02T12:48:02.523Z",
   "records": {
     "provisional::Indian Navy::SSC Officer": {
       "force": "Indian Navy",
@@ -16,6 +16,25 @@
       "closesOn": "2026-11-15T00:00:00.000Z",
       "firstSeen": "2026-10-14T09:40:58.721Z",
       "lastSeen": "2026-10-28T21:13:50.303Z",
+      "provisional": true,
+      "admitCard": false,
+      "origin": "thirdparty:govtjobsalert"
+    },
+    "provisional::Indian Air Force::AFCAT": {
+      "force": "Indian Air Force",
+      "exam": "AFCAT",
+      "subCode": "AFCAT",
+      "title": "AFCAT Notification 2027 Out @afcat.edcil.co.in, IAF AFCAT 1 Vacancy, Registration Process",
+      "status": "UNCONFIRMED",
+      "reason": "Any bachelor’s degree entry (unconfirmed) – likely eligible; verify.",
+      "url": "https://testbook.com/news/afcat-1-notification-2027-out/",
+      "hash": "576181a3ccc8197f036381eaf6aeca8fc8ca69860ef93db2f64d419662034271",
+      "emailed": true,
+      "pendingRetry": false,
+      "examDate": null,
+      "closesOn": "2026-12-11T00:00:00.000Z",
+      "firstSeen": "2026-11-02T12:47:56.307Z",
+      "lastSeen": "2026-11-02T12:48:00.387Z",
       "provisional": true,
       "admitCard": false,
       "origin": "thirdparty:govtjobsalert"
