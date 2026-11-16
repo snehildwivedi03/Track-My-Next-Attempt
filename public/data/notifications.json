@@ -1,25 +1,6 @@
 {
-  "updatedAt": "2026-11-15T21:08:43.387Z",
+  "updatedAt": "2026-11-16T13:04:56.916Z",
   "records": {
-    "provisional::Indian Navy::SSC Officer": {
-      "force": "Indian Navy",
-      "exam": "SSC Officer",
-      "subCode": "SSC Officer",
-      "title": "Job PostLast Date: 15 Nov 2026DRDO ARDE Pune Recruitment 2026 – 11 Consultant Posts for Retired Government Officials (Advt ARDE/CONSULTANT/2026/344-354): Technical & Admin ConsultantsOrg: DefenceVacancy: 11Updated on 23 Oct 2026",
-      "status": "UNCONFIRMED",
-      "reason": "Any bachelor’s degree entry (unconfirmed) – likely eligible; verify.",
-      "url": "https://govtjobsalert.in/drdo-arde-pune-consultant-recruitment-2026/",
-      "hash": "98e0007fe8072fffcc910316bf9f3b8ff2d5bda4036fb9e15476cb8937eaf756",
-      "emailed": true,
-      "pendingRetry": false,
-      "examDate": null,
-      "closesOn": "2026-11-15T00:00:00.000Z",
-      "firstSeen": "2026-10-14T09:40:58.721Z",
-      "lastSeen": "2026-10-28T21:13:50.303Z",
-      "provisional": true,
-      "admitCard": false,
-      "origin": "thirdparty:govtjobsalert"
-    },
     "provisional::Indian Air Force::AFCAT": {
       "force": "Indian Air Force",
       "exam": "AFCAT",
@@ -34,9 +15,28 @@
       "examDate": "2027-01-31T00:00:00.000Z",
       "closesOn": "2026-12-11T00:00:00.000Z",
       "firstSeen": "2026-11-02T12:47:56.307Z",
-      "lastSeen": "2026-11-15T21:08:41.981Z",
+      "lastSeen": "2026-11-16T13:04:55.348Z",
       "provisional": true,
       "admitCard": false,
+      "origin": "thirdparty:govtjobsalert"
+    },
+    "provisional::Indian Navy::SSC Officer::admit": {
+      "force": "Indian Navy",
+      "exam": "SSC Officer",
+      "subCode": "SSC Officer",
+      "title": "AVNL Executive Posts Interview Call Letter 2026Admit CardUpdated today",
+      "status": "ADMIT CARD (unconfirmed)",
+      "reason": "Admit card / hall ticket reported out – download and verify on the official site.",
+      "url": "https://govtjobsalert.in/avnl-executive-posts-interview-call-letter-2026/",
+      "hash": "996b82cbfd1428616e93d042601208107ef0b8867ee341cef1c4c6127ca14e85",
+      "emailed": true,
+      "pendingRetry": false,
+      "examDate": null,
+      "closesOn": "2026-12-02T00:00:00.000Z",
+      "firstSeen": "2026-11-16T13:04:52.631Z",
+      "lastSeen": "2026-11-16T13:04:52.631Z",
+      "provisional": true,
+      "admitCard": true,
       "origin": "thirdparty:govtjobsalert"
     }
   }
