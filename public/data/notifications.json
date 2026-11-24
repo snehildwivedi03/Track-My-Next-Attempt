@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-24T02:59:18.426Z",
+  "updatedAt": "2026-11-24T15:10:59.461Z",
   "records": {
     "provisional::Indian Air Force::AFCAT": {
       "force": "Indian Air Force",
@@ -15,7 +15,7 @@
       "examDate": "2027-01-31T00:00:00.000Z",
       "closesOn": "2026-12-11T00:00:00.000Z",
       "firstSeen": "2026-11-02T12:47:56.307Z",
-      "lastSeen": "2026-11-24T02:59:16.206Z",
+      "lastSeen": "2026-11-24T15:10:58.050Z",
       "provisional": true,
       "admitCard": false,
       "origin": "thirdparty:govtjobsalert"
